@@ -1,0 +1,62 @@
+{
+  "name": "AddressToken",
+  "version": "1.0.0",
+  "description": "ERC721 token allowing to deploy smart contracts at specific addresses",
+  "main": "y",
+  "directories": {
+    "test": "test"
+  },
+  "devDependencies": {
+    "babel-eslint": "^9.0.0",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-flow": "^6.23.0",
+    "babel-register": "^6.26.0",
+    "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
+    "chai-bignumber": "^2.0.2",
+    "coveralls": "^3.0.1",
+    "eslint": "^5.5.0",
+    "eslint-config-defaults": "^9.0.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.12.0",
+    "eslint-plugin-node": "^7.0.1",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-react": "^7.9.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "ethereumjs-util": "^5.2.0",
+    "ethereumjs-wallet": "^0.6.0",
+    "ethjs-abi": "^0.2.1",
+    "ganache-core": "^2.1.2",
+    "solidity-coverage": "^0.5.4",
+    "solium": "^1.1.7",
+    "truffle": "^4.1.11",
+    "web3": "^0.19.1",
+    "openzeppelin-solidity": "^1.12.0"
+  },
+  "scripts": {
+    "test": "truffle test",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "lint:sol": "solium -d .",
+    "lint:sol:fix": "solium -d . --fix",
+    "lint:all": "npm run lint && npm run lint:sol",
+    "lint:all:fix": "npm run lint:fix && npm run lint:sol:fix",
+    "coverage": "./node_modules/.bin/solidity-coverage",
+    "rpc": "scripts/rpc.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/1Address/AddressToken.git"
+  },
+  "keywords": [
+    "solidity",
+    "truffle"
+  ],
+  "author": "Anton Bukov",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/1Address/AddressToken/issues"
+  },
+  "homepage": "https://github.com/1Address/AddressToken#readme"
+}
