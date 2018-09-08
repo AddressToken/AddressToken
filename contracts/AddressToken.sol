@@ -13,22 +13,26 @@ contract AddressToken is ERC721Full("AddressToken", "ATKN"), IAddressDeployerOwn
 
     function ownershipTransferred(address _byWhom) public returns(bool) {
         mint(_byWhom);
+        return true;
     }
 
     // Should be called by AddressDeployer smart contract
     function mint(address _beneficiary) public returns(bool) {
         require(deployerHash == keccak256(bytecodeAt(msg.sender)));
         _mint(_beneficiary, uint256(msg.sender));
+        return true;
     }
 
     function burn(uint256 _tokenId) public returns(bool) {
         _burn(msg.sender, _tokenId);
         AddressDeployer(_tokenId).transferOwnership(msg.sender);
+        return true;
     }
 
     function deploy(uint256 _tokenId, bytes _data) public returns(bool) {
         _burn(msg.sender, _tokenId);
         AddressDeployer(_tokenId).deploy(_data);
+        return true;
     }
 
     function tokenURI(uint256 _tokenId) public view returns(string) {
