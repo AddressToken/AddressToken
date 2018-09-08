@@ -5,6 +5,7 @@ contract IAddressDeployerOwner {
     function ownershipTransferred(address _byWhom) public returns(bool);
 }
 
+
 contract AddressDeployer {
     address public owner = msg.sender;
 
@@ -23,6 +24,7 @@ contract AddressDeployer {
     }
 
     function deploy(bytes _data) public onlyOwner {
+        // solium-disable-next-line security/no-low-level-calls
         require(address(0).call(_data));
         selfdestruct(msg.sender);
     }

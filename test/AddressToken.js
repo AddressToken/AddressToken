@@ -11,9 +11,9 @@ require('chai')
 const AddressDeployer = artifacts.require('AddressDeployer.sol');
 const AddressToken = artifacts.require('AddressToken.sol');
 
-// var getDeterministicContractAddress = function(address, nonce = 0) {
-//     return '0x' + ethUtils.sha3(ethUtils.rlp.encode([address, nonce])).slice(12).toString('hex');
-// }
+var getDeterministicContractAddress = function (address, nonce = 0) {
+    return '0x' + ethUtils.sha3(ethUtils.rlp.encode([address, nonce])).slice(12).toString('hex');
+};
 
 contract('AddressToken', function ([_, wallet1, wallet2, wallet3, wallet4, wallet5]) {
     let addressDeployer;
