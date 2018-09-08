@@ -1,7 +1,6 @@
-'use strict';
 // @flow
 
-// import EVMRevert from './helpers/EVMRevert';
+import EVMRevert from './helpers/EVMRevert';
 
 var ethUtils = require('ethereumjs-util');
 require('chai')
@@ -12,9 +11,9 @@ require('chai')
 const AddressDeployer = artifacts.require('AddressDeployer.sol');
 const AddressToken = artifacts.require('AddressToken.sol');
 
-var getDeterministicContractAddress = function(address, nonce = 0) {
-    return '0x' + ethUtils.sha3(ethUtils.rlp.encode([address, nonce])).slice(12).toString('hex');
-}
+// var getDeterministicContractAddress = function(address, nonce = 0) {
+//     return '0x' + ethUtils.sha3(ethUtils.rlp.encode([address, nonce])).slice(12).toString('hex');
+// }
 
 contract('AddressToken', function ([_, wallet1, wallet2, wallet3, wallet4, wallet5]) {
     let addressDeployer;
@@ -30,6 +29,15 @@ contract('AddressToken', function ([_, wallet1, wallet2, wallet3, wallet4, walle
 
     it('should mint properly', async function () {
         await addressDeployer.transferOwnershipAndNotify(addressToken.address);
+
+        (await addressToken.balanceOf.call(_)).should.be.bignumber.equal(1);
+        (await addressDeployer.owner.call()).should.be.equal(addressToken.address);
+        (await addressToken.tokenOfOwnerByIndex.call(_, 0)).should.be.bignumber.equal(addressDeployer.address);
+    });
+
+    it('should not be able to mint twice', async function () {
+        await addressDeployer.transferOwnershipAndNotify(addressToken.address);
+        await addressDeployer.transferOwnershipAndNotify(addressToken.address).should.be.rejectedWith(EVMRevert);
 
         (await addressToken.balanceOf.call(_)).should.be.bignumber.equal(1);
         (await addressDeployer.owner.call()).should.be.equal(addressToken.address);
