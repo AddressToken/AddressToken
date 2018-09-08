@@ -147,6 +147,7 @@ window.addEventListener('load', async function() {
 
         const indexOfSelectedToken = tokenDestinations.indexOf($('#tokens').val());
         const selectedToken = accountTokens[indexOfSelectedToken];
+        console.log('Deploying to: ' + selectedToken);
 
         const contractData = $('#token-contract-data').val();
         sendTransaction(addressTokenContract.methods.deploy(selectedToken, contractData), 0, addressTokenContract.options.address);
