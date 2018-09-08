@@ -30,6 +30,7 @@ contract AddressDeployer {
         assembly {
             addr := create(0, add(_data, 0x20), mload(_data))
         }
+        require(addr != 0);
         emit Deployed(addr);
         selfdestruct(msg.sender);
     }
