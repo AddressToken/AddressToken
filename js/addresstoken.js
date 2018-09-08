@@ -47,28 +47,23 @@ async function connectToWeb3() {
     accountPromiseDone = null;
 }
 
-async function sendTransaction(preTx, value, to, skipEstimate) {
+async function sendTransaction(preTx, value, to) {
     // Get gas price
     const gasPriceJSON = (await $.getJSON('https://gasprice.poa.network/'));
     console.log('gasPriceJSON = ', gasPriceJSON);
-    const estimateGas = skipEstimate ? undefined : await preTx.estimateGas({ from: account, value: value, gasPrice: gasPriceJSON.standard * 10**9 });
+    const estimateGas = await preTx.estimateGas({ from: account, value: value, gasPrice: gasPriceJSON.standard * 10**9 });
     console.log('estimateGas = ', estimateGas);
-    const gasPrice = skipEstimate ? gasPriceJSON.standard : Math.trunc((gasPriceJSON.standard + (gasPriceJSON.fast - gasPriceJSON.standard)*estimateGas/4000000) * 10**9);
+    const gasPrice = Math.trunc((gasPriceJSON.standard + (gasPriceJSON.fast - gasPriceJSON.standard)*estimateGas/4000000) * 10**9);
     console.log('gasPrice = ', gasPrice / 10**9);
 
     if (account) {
-        if (estimateGas) {
-            const tx = await preTx.send({ from: account, value: value, gasPrice: gasPrice, gas: estimateGas });
-            console.log(tx);
-        } else {
-            const tx = await preTx.send({ from: account, value: value, gasPrice: gasPrice });
-            console.log(tx);
-        }
+        const tx = await preTx.send({ from: account, value: value, gasPrice: gasPrice, gas: estimateGas });
+        console.log(tx);
     } else {
         $('#tx_to').val(to);
         $('#tx_value').val(value);
         $('#tx_data').val(preTx.encodeABI());
-        $('#tx_gas').val(estimateGas || '');
+        $('#tx_gas').val(estimateGas);
         $('#tx_gas_price').val(Math.trunc(gasPrice/10**9*100)/100 + ' Gwei');
         $('#txModal').modal('show');
     }
@@ -88,7 +83,7 @@ window.addEventListener('load', async function() {
     const getTokenDestinations = async function (addressTokenContract, tokens) {
         return (await Promise.all(
             tokens.map(tid => addressTokenContract.methods.tokenURI(tid).call())
-        )).map(uri => uri.split(':')[1]);
+        )).map(uri => web3js.utils.toChecksumAddress(uri.split(':')[1]));
     };
 
     const updateTokens = async function () {
@@ -104,7 +99,22 @@ window.addEventListener('load', async function() {
     };
 
     var getDeterministicContractAddress = function (address, nonce = 0) {
-        return '0x' + web3js.utils.keccak256('0xd694' + address.substr(2) + '0' + nonce).slice(26).toString('hex');
+        if (nonce == 0) {
+            return '0x' + web3js.utils.keccak256('0xd694' + address.substr(2) + '80').slice(26).toString('hex');
+        }
+        if (nonce <= 0x7f) {
+            return '0x' + web3js.utils.keccak256('0xd694' + address.substr(2) + web3js.utils.toBN(nonce).toString(16, 2)).slice(26).toString('hex');
+        }
+        if (nonce <= 0xff) {
+            return '0x' + web3js.utils.keccak256('0xd794' + address.substr(2) + '81' + web3js.utils.toBN(nonce).toString(16, 2)).slice(26).toString('hex');
+        }
+        if (nonce <= 0xffff) {
+            return '0x' + web3js.utils.keccak256('0xd894' + address.substr(2) + '82' + web3js.utils.toBN(nonce).toString(16, 4)).slice(26).toString('hex');
+        }
+        if (nonce <= 0xffffff) {
+            return '0x' + web3js.utils.keccak256('0xd994' + address.substr(2) + '83' + web3js.utils.toBN(nonce).toString(16, 6)).slice(26).toString('hex');
+        }
+        return '0x' + web3js.utils.keccak256('0xda94' + address.substr(2) + '84' + web3js.utils.toBN(nonce).toString(16, 8)).slice(26).toString('hex');
     };
 
     $('#addressTokenAddress').bind('input', async function() {
@@ -153,7 +163,7 @@ window.addEventListener('load', async function() {
         const addressTokenContract = new web3js.eth.Contract(addressTokenABI, $('#addressTokenAddress').val());
         const deployerContract = new web3js.eth.Contract(deployerABI, $('#new-token-deployer').val());
 
-        sendTransaction(await deployerContract.methods.transferOwnershipAndNotify(addressTokenContract.options.address), 0, deployerContract.options.address, true);
+        sendTransaction(await deployerContract.methods.transferOwnershipAndNotify(addressTokenContract.options.address), 0, deployerContract.options.address);
     });
 
     // SETUP UI
