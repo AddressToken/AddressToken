@@ -5,9 +5,11 @@
 
 ERC721 token allowing to deploy smart contracts at specific addresses
 
-# Ethereum Mainnet
+# Usage
 
-[0x68c403abcf94a0a482b33238d9f9eba49f507c1e](https://etherscan.io/address/0x68c403abcf94a0a482b33238d9f9eba49f507c1e)
+Web UI - [AddressToken.io](https://AddressToken.io)
+
+Ethereum mainnet token - [0x68c403abcf94a0a482b33238d9f9eba49f507c1e](https://etherscan.io/address/0x68c403abcf94a0a482b33238d9f9eba49f507c1e)
 
 # Installation
 
