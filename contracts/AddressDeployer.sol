@@ -7,6 +7,8 @@ contract IAddressDeployerOwner {
 
 
 contract AddressDeployer {
+    event Deployed(address at);
+
     address public owner = msg.sender;
 
     modifier onlyOwner {
@@ -23,9 +25,12 @@ contract AddressDeployer {
         require(_newOwner.ownershipTransferred(msg.sender));
     }
 
-    function deploy(bytes _data) public onlyOwner {
-        // solium-disable-next-line security/no-low-level-calls
-        require(address(0).call(_data));
+    function deploy(bytes _data) public onlyOwner returns(address addr) {
+        // solium-disable-next-line security/no-inline-assembly
+        assembly {
+            addr := create(0, add(_data, 0x20), mload(_data))
+        }
+        emit Deployed(addr);
         selfdestruct(msg.sender);
     }
 }
