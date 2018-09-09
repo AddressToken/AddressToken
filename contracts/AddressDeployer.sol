@@ -32,6 +32,8 @@ contract AddressDeployer {
         }
         require(addr != 0);
         emit Deployed(addr);
-        //selfdestruct(msg.sender); // For some reason not works properly! Will fix in update!
+
+        // For some reason selfdestruct fails! Will fix in next update!
+        owner = 0; // selfdestruct(msg.sender);
     }
 }
