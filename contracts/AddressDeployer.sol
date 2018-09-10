@@ -25,15 +25,14 @@ contract AddressDeployer {
         require(_newOwner.ownershipTransferred(msg.sender));
     }
 
-    function deploy(bytes _data) public onlyOwner returns(address addr) {
-        // solium-disable-next-line security/no-inline-assembly
+    function deploy(bytes _data) public onlyOwner {
+        address addr;
+        // solium-disable-next-line security/no-inline-assembly        
         assembly {
             addr := create(0, add(_data, 0x20), mload(_data))
         }
         require(addr != 0);
         emit Deployed(addr);
-
-        // For some reason selfdestruct fails! Will fix in next update!
-        owner = 0; // selfdestruct(msg.sender);
+        selfdestruct(msg.sender);
     }
 }
