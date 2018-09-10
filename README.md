@@ -1,7 +1,7 @@
 # AddressToken
 
-[![Build Status](https://travis-ci.org/1Address/AddressToken.svg?branch=master)](https://travis-ci.org/1Address/AddressToken)
-[![Coverage Status](https://coveralls.io/repos/github/1Address/AddressToken/badge.svg)](https://coveralls.io/github/1Address/AddressToken)
+[![Build Status](https://travis-ci.org/AddressToken/AddressToken.svg?branch=master)](https://travis-ci.org/AddressToken/AddressToken)
+[![Coverage Status](https://coveralls.io/repos/github/AddressToken/AddressToken/badge.svg)](https://coveralls.io/github/AddressToken/AddressToken)
 
 ERC721 token allowing to deploy smart contracts at specific addresses
 
